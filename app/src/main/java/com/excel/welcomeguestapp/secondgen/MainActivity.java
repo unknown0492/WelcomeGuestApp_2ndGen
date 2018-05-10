@@ -7,10 +7,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
@@ -31,6 +34,10 @@ public class MainActivity extends Activity {
     Context context;
 
     public static final String TAG = "WelcomeGuestApp";
+    AnimatedGifImageView loading;
+
+    boolean timeout;
+    long timeout_interval = 10000;
 
     String[] permissions = {
             // Manifest.permission.RECEIVE_BOOT_COMPLETED, // Normal Permission
@@ -45,7 +52,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
-        //setContentView( R.layout.activity_main );
+        setContentView( R.layout.activity_main );
 
         if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
             if ( checkPermissions() ) {
@@ -73,6 +80,8 @@ public class MainActivity extends Activity {
         rl_video_screen = (RelativeLayout) findViewById( R.id.rl_video_screen );
         wv_welcome_screen = (WebView) findViewById( R.id.wv_welcome_screen );
 
+        loading = (AnimatedGifImageView) findViewById( R.id.loading );
+        loading.setAnimatedGif( context.getResources().getIdentifier( "drawable/small_loading1" , null, context.getPackageName() ), AnimatedGifImageView.TYPE.AS_IS );
 
         context.deleteDatabase("webview.db");
         context.deleteDatabase("webviewCache.db");
@@ -90,7 +99,8 @@ public class MainActivity extends Activity {
     private void configureWebView(){
         Log.d( TAG, "configureWebView()" );
 
-        wv_welcome_screen = new WebView( context );// (WebView) findViewById( R.id.wv_welcome_screen );
+        //wv_welcome_screen = new WebView( context );//
+        //wv_welcome_screen = (WebView) findViewById( R.id.wv_welcome_screen );
         wv_welcome_screen.clearCache(true);
         wv_welcome_screen.setFocusable( false );
         wv_welcome_screen.getSettings().setJavaScriptEnabled( true );
@@ -98,14 +108,36 @@ public class MainActivity extends Activity {
 
         wv_welcome_screen.setWebViewClient(new WebViewClient() {
 
-            public void onPageFinished(WebView webview, String url){
-                Log.d( TAG, "page finished" );
-                super.onPageFinished(webview, url);
+            public void onPageFinished( WebView webview, String url ){
+                super.onPageFinished( webview, url );
+
+                Log.d( TAG, "onPageFinished()" );
+
+                loading.setVisibility( View.GONE );
+
+                timeout = false;
             }
 
-            public void onPageStarted(WebView webview, String s, Bitmap bitmap){
-                Log.d( TAG, "page started " );
-                super.onPageStarted(webview, s, bitmap);
+            public void onPageStarted( WebView webview, String s, Bitmap bitmap ){
+                super.onPageStarted( webview, s, bitmap );
+
+                Log.d( TAG, "onPageStarted()" );
+                loading.setVisibility( View.VISIBLE );
+
+                Runnable run = new Runnable() {
+                    public void run() {
+
+                        Log.e( TAG, "Timeout" );
+                        if( timeout ) {
+
+                            wv_welcome_screen.loadUrl( "file:///android_asset/local_welcome/index.html" );
+
+                        }
+                    }
+                };
+                Handler myHandler = new Handler( Looper.myLooper() );
+                myHandler.postDelayed( run, timeout_interval );
+
             }
 
             public void onReceivedError( WebView view, int errorCode, String description, String failingUrl ) {
@@ -116,7 +148,7 @@ public class MainActivity extends Activity {
         });
         wv_welcome_screen.loadUrl( UtilURL.getWebserviceURL() + "?what_do_you_want=url_forward&url_type=welcome_screen&mac_address="+ UtilNetwork.getMacAddress( context ) );
         //Log.d( null, UtilURL.getWebserviceURL() + "?what_do_you_want=url_forward&url_type=welcome_screen&mac_address="+ UtilNetwork.getMacAddress( context ) );
-        setContentView( wv_welcome_screen );
+        //setContentView( wv_welcome_screen );
 
         //setIsWelcomeScreenShown( true );
     }
