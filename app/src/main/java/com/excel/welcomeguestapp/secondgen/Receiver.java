@@ -32,6 +32,13 @@ public class Receiver extends BroadcastReceiver {
 
         }
         else if( action.equals( "show_welcome_screen" ) ){
+
+            if( ! configurationReader.getIsWelcomeScreenEnabled() ){
+                Log.e( TAG, "Welcome screen has been disabled, hence will not show up !" );
+                return;
+            }
+
+
             if( ! MainActivity.isWelcomeScreenShown() ) {
                 String is_ots_completed = configurationReader.getIsOtsCompleted().trim();
                 if( is_ots_completed.equals( "1" ) ) {

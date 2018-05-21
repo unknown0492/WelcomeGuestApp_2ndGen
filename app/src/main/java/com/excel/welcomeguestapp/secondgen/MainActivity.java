@@ -165,7 +165,7 @@ public class MainActivity extends Activity {
         String key_name = KeyEvent.keyCodeToString( i );
         Log.d( null, "KeyPressed : "+i+","+key_name );
 
-        if( i == 23 ){
+        if( ( i == 23 ) || ( i == 66 ) ){
             finish();
             //Log.d( "LoadingActivity", "Monkey executing now !" );
             //UtilShell.executeShellCommandWithOp( "monkey -p com.excel.appstvlauncher.secondgen -c android.intent.category.LAUNCHER 1" );

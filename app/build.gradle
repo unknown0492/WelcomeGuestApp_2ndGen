@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '26.0.2'
+
     defaultConfig {
         applicationId "com.excel.welcomeguestapp.secondgen"
         minSdkVersion 17
@@ -34,6 +34,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:23.4.0'
-    compile project(':ExcelClassLibrary-debug')
+    compile project(':ExcelClassLibrary')
     testCompile 'junit:junit:4.12'
 }
