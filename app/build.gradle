@@ -1,39 +1,65 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-
+    compileSdkVersion 27
+    buildToolsVersion '28.0.3'
+    signingConfigs {
+        debug {
+            storeFile file("G:/Workspaces/android_studio/keystores/welcomeguestapp.jks")
+            storePassword "9xmhaqse"
+            keyAlias "welcomeguestapp"
+            keyPassword "9xmhaqse"
+            v2SigningEnabled true
+        }
+        release {
+            storeFile file("G:/Workspaces/android_studio/keystores/welcomeguestapp.jks")
+            storePassword "9xmhaqse"
+            keyAlias "welcomeguestapp"
+            keyPassword "9xmhaqse"
+            v2SigningEnabled true
+        }
+    }
     defaultConfig {
         applicationId "com.excel.welcomeguestapp.secondgen"
-        minSdkVersion 17
-        targetSdkVersion 23
+        minSdkVersion 19
+        targetSdkVersion 27
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.1"
         project.ext.set("archivesBaseName", "0-WelcomeGuestApp_2ndGen_v" + defaultConfig.versionName);
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
+
     buildTypes {
-        release {
+        /*release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }*/
+        debug {
+            signingConfig signingConfigs.debug
+            debuggable true
         }
+        release {
+            signingConfig signingConfigs.release
+            debuggable true
+        }
+    }
+    productFlavors {
     }
 }
 
 dependencies {
     /*
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile project(':ExcelClassLibrary-debug')
-    testCompile 'junit:junit:4.12'
-    */
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile project(':ExcelClassLibrary')
-    testCompile 'junit:junit:4.12'
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+        androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+            exclude group: 'com.android.support', module: 'support-annotations'
+        })
+        compile project(':ExcelClassLibrary-debug')
+        testCompile 'junit:junit:4.12'
+        */
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation project(':ExcelClassLibrary')
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

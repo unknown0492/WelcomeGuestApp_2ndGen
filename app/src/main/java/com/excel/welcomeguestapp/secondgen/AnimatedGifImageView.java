@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.widget.ImageViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -15,7 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class AnimatedGifImageView extends android.support.v7.widget.AppCompatImageView {
+public class AnimatedGifImageView extends android.support.v7.widget.AppCompatImageView  {
 	public static enum TYPE {
 		FIT_CENTER, STREACH_TO_FIT, AS_IS
 	};
@@ -41,6 +42,7 @@ public class AnimatedGifImageView extends android.support.v7.widget.AppCompatIma
 
 	public void setAnimatedGif(int rawResourceId, TYPE streachType) {
 		setImageBitmap(null);
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 		}
